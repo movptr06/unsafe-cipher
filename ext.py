@@ -3,12 +3,11 @@
 import base64
 
 def ADD(A, B):
-    if len(A) != len(B):
-        return False
+    length = len(A) if len(A) < len(B) else len(B)
 
     X = []
 
-    for i in range(len(A)):
+    for i in range(length):
         X.append((A[i] + B[i]) % 256)
 
     return X
@@ -28,12 +27,11 @@ def ROTATE(X, R):
     return Y
 
 def XOR(A, B):
-    if len(A) != len(B):
-        return False
+    length = len(A) if len(A) < len(B) else len(B)
 
     X = []
 
-    for i in range(len(A)):
+    for i in range(length):
         X.append(A[i] ^ B[i])
 
     return X
