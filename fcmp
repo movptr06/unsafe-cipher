@@ -12,19 +12,24 @@ FILENAME_HELP = "File to encrypt/decrypt"
 KEYGEN_HELP = "Generate new FCMP keys"
 KEY_HELP = "Choosing a path for keys"
 ENCRYPT_HELP = "Encrypt file with public_key"
+OUTPUT_HELP = "Select output file"
 
-def args():
+def getargs():
     parser = argparse.ArgumentParser(description=DESCRIPTION)
 
-    parser.add_argument("filename", metavar="filename", type=str, help=FILENAME_HELP)
-    parser.add_argument("-kg", metavar="\b", help=KEYGEN_HELP)
-    parser.add_argument("-k", metavar="path", type=str, help=KEY_HELP)
-    parser.add_argument("-e", metavar="public_key", type=str, help=ENCRYPT_HELP)
+    parser.add_argument("file", metavar="file", nargs="?", default=None, help=FILENAME_HELP)
+    parser.add_argument("-kg", action="store_true", help=KEYGEN_HELP)
+    parser.add_argument("-k", metavar="path", help=KEY_HELP)
+    parser.add_argument("-e", metavar="public_key", help=ENCRYPT_HELP)
+    parser.add_argument("-o", metavar="output", help=OUTPUT_HELP)
 
     return parser.parse_args()
 
 def main():
-    args()
+    args = getargs()
+
+    print(args.k)
+
     exit(0)
 
 if __name__ == "__main__":
