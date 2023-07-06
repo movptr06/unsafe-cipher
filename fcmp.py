@@ -2,6 +2,8 @@
 
 # Fast Cipher Message Protocol 1.0
 
+import os
+
 from base64 import b64encode, b64decode
 
 from ext import ext_block_encrypt, ext_block_decrypt, ext_hash
@@ -111,12 +113,27 @@ def fcmp_keygen_file(private_filename, public_filename):
     pub = fcmp_to_public(public)
 
     with open(private_filename, "wt") as fp:
-        msg = fp.write(pvt)
+        fp.write(pvt)
 
     with open(public_filename, "wt") as fp:
-        msg = fp.write(pub)
+        fp.write(pub)
+
+    os.chmod(private_filename, 0o600)
+    os.chmod(public_filename, 0o600)
 
     return pvt + pub
+
+def fcmp_getkey(private_filename, public_filename):
+    with open(private_filename, "rt") as fp:
+        private = fp.read()
+
+    with open(public_filename, "rt") as fp:
+        public = fp.read()
+
+    private = fcmp_from_private(private)
+    public = fcmp_from_public(public)
+
+    return private, public
 
 def fcmp_encrypt_file(sender_private, sender_public, receiver_public, filename):
     with open(filename, "rb") as fp:

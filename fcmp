@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 
 import os
+import os.path
 import argparse
 
-from base64 import b64encode, b64decode
-
-from fcmp import fcmp_keygen_file, fcmp_encrypt, fcmp_decrypt
+from fcmp import *
 
 DESCRIPTION = "Fast Cipher Message Protocol 1.0"
 
@@ -26,16 +25,27 @@ def keygen(key_path):
     return res
 
 def getkey(key_path):
-    return
+    private_file = key_path + "/" + PRIVATE_FILE
+    public_file = key_path + "/" + PUBLIC_FILE
+    return fcmp_getkey(private_file, public_file)
 
-def encrypt():
-    return
+def encrypt(private, public, public_filename, filename):
+    with open(public_filename, "rt") as fp:
+        receiver_private = fp.read()
+    receiver_private = fcmp_from_public(receiver_private)
+    return fcmp_encrypt_file(private, public, receiver_private, filename)
 
-def decrypt():
-    return
+def decrypt(private, filename):
+    return fcmp_decrypt_file(private, filename)
 
 def gethome():
     return os.path.expanduser("~")
+
+def check_file(filename):
+    if not os.path.exists(filename):
+        print(filename + " File not found.")
+        exit(1)
+    return True
 
 def getargs():
     parser = argparse.ArgumentParser(description=DESCRIPTION)
@@ -46,29 +56,47 @@ def getargs():
     parser.add_argument("-e", metavar="public_key", help=ENCRYPT_HELP)
     parser.add_argument("-o", metavar="output", help=OUTPUT_HELP)
 
-    return parser.parse_args()
+    return parser.parse_args(), parser
 
 def main():
-    args = getargs()
+    args, parser = getargs()
 
     if args.k:
         key_path = args.k
     else:
         key_path = gethome() + "/" + DIR
 
-    os.makedirs(key_path, exist_ok=True)
+    if not os.path.exists(key_path):
+        os.makedirs(key_path, exist_ok=True)
+        keygen(key_path)
 
     if args.kg:
-        keygen(key_path)
+        res = keygen(key_path)
+        print(res)
         exit(0)
 
     private, public = getkey(key_path)
     filename = args.file
 
+    if not filename:
+        parser.print_help()
+        exit(0)
+
     if args.e:
-        encrypt()
+        check_file(args.e)
+        check_file(filename)
+        res = encrypt(private, public, args.e, filename)
     else:
-        decrypt()
+        check_file(filename)
+        res = decrypt(private, filename)
+
+    if args.o:
+        if type(res) == type(""): res = res.encode()
+        with open(args.o, "wb") as fp:
+            fp.write(res)
+    else:
+        if type(res) != type(""): res = res.decode()
+        print(res)
 
     exit(0)
 
