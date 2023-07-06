@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
 
-import base64
-
 def ADD(A, B):
     length = len(A) if len(A) < len(B) else len(B)
 
@@ -152,41 +150,3 @@ def ext_hash(TEXT):
     HASH = bytes(HASH)
 
     return HASH
-
-def main():
-    print("= Choose a mode (ENC/DEC)")
-    MODE = input()
-
-    if MODE == "ENC":
-        print("= Plain text")
-        PT = input()
-        PT = base64.b64decode(PT)
-
-        print("= Cryptographic key")
-        KEY = input()
-        KEY = base64.b64decode(KEY)
-
-        print("= Cipher text")
-        CT = ext_block_encrypt(PT, KEY)
-        CT = base64.b64encode(CT).decode()
-    
-        print(CT)
-    elif MODE == "DEC":
-        print("= Cipher text")
-        CT = input()
-        CT = base64.b64decode(CT)
-
-        print("= Cryptographic key")
-        KEY = input()
-        KEY = base64.b64decode(KEY)
-
-        print("= Plain text")
-        PT = ext_block_decrypt(CT, KEY)
-        PT = base64.b64encode(PT).decode()
-
-        print(PT)
-    else:
-        return 1
-
-if __name__ == "__main__":
-    exit(main())
