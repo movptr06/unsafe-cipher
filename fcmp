@@ -43,7 +43,7 @@ def gethome():
 
 def check_file(filename):
     if not os.path.exists(filename):
-        print(filename + " File not found.")
+        print(filename + " File not found")
         exit(1)
     return True
 
@@ -86,9 +86,15 @@ def main():
         check_file(args.e)
         check_file(filename)
         res = encrypt(private, public, args.e, filename)
+        if res == False:
+            print("Encryption failure")
+            exit(1)
     else:
         check_file(filename)
         res = decrypt(private, filename)
+        if res == False:
+            print("Decryption failure")
+            exit(1)
 
     if args.o:
         if type(res) == type(""): res = res.encode()
