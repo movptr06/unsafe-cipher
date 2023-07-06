@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Fast Cipher Message Protocol
+# Fast Cipher Message Protocol 1.0
 
 from base64 import b64encode, b64decode
 
