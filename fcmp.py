@@ -104,6 +104,20 @@ def fcmp_from_public(msg):
 
     return public
 
+def fcmp_keygen_file(private_filename, public_filename):
+    private, public = fcmp_keygen()
+
+    pvt = fcmp_to_private(private)
+    pub = fcmp_to_public(public)
+
+    with open(private_filename, "wt") as fp:
+        msg = fp.write(pvt)
+
+    with open(public_filename, "wt") as fp:
+        msg = fp.write(pub)
+
+    return pvt + pub
+
 def fcmp_encrypt_file(sender_private, sender_public, receiver_public, filename):
     with open(filename, "rb") as fp:
         msg = fp.read()
