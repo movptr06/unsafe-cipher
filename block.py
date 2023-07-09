@@ -52,7 +52,7 @@ def block_encrypt(alg, hash_alg, block_size, PT, KEY):
     KEY0 = XOR(KEY, IV0)
     KEY1 = XOR(KEY, IV1)
 
-    HMAC = hash_alg(hash_alg(PT + KEY0) + KEY1)
+    HMAC = hash_alg(KEY1 + hash_alg(KEY0 + PT + KEY0) + KEY1)
     TEXT = HMAC + PT
     CT = CTR_mode_encrypt(alg, block_size, TEXT, KEY)
 
@@ -80,7 +80,7 @@ def block_decrypt(alg, hash_alg, block_size, CT, KEY):
     TEXT = CTR_mode_encrypt(alg, block_size, CT, KEY)
     HMAC = TEXT[:hash_size]
     PT = TEXT[hash_size:]
-    if HMAC != hash_alg(hash_alg(PT + KEY0) + KEY1):
+    if HMAC != hash_alg(KEY1 + hash_alg(KEY0 + PT + KEY0) + KEY1):
         return False
 
     return PT
