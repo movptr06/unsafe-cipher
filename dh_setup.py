@@ -2,10 +2,10 @@
 
 from Crypto.Util.number import getPrime, isPrime
 
-X = 2 ** 2048
+X = 2 ** 2000
 
 while True:
-    Y = getPrime(64)
+    Y = getPrime(48)
     P = X * Y
     if isPrime(P + 1):
         P += 1
